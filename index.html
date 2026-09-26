@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>METHRA Mining</title>
+
+<style>z
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#090b10;
+  color:#fff;
+}
+.app{
+  max-width:480px;
+  margin:auto;
+  min-height:100vh;
+  padding:20px 16px 90px;
+}
+.header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.logo{
+  font-size:26px;
+  font-weight:800;
+  color:#f5b82e;
+}
+.card{
+  background:#151923;
+  border:1px solid #292f3d;
+  border-radius:20px;
+  padding:20px;
+  margin-top:16px;
+}
+.balance{
+  font-size:38px;
+  font-weight:800;
+  margin:8px 0;
+}
+.muted{color:#8e96a8}
+.mine-btn{
+  width:100%;
+  border:0;
+  border-radius:16px;
+  padding:17px;
+  margin-top:18px;
+  background:#f5b82e;
+  color:#111;
+  font-size:18px;
+  font-weight:800;
+}
+.progress{
+  height:10px;
+  background:#292f3d;
+  border-radius:20px;
+  margin-top:18px;
+  overflow:hidden;
+}
+.bar{
+  height:100%;
+  width:0%;
+  background:#f5b82e;
+}
+.stats{
+  display:flex;
+  justify-content:space-between;
+  margin-top:14px;
+}
+.item{
+  background:#1b202c;
+  padding:12px;
+  border-radius:12px;
+  width:48%;
+}
+.section-title{
+  font-size:20px;
+  font-weight:700;
+  margin-bottom:12px;
+}
+.task{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 0;
+  border-bottom:1px solid #292f3d;
+}
+.small-btn{
+  border:0;
+  border-radius:10px;
+  padding:9px 14px;
+  background:#f5b82e;
+  font-weight:700;
+}
+.nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  max-width:480px;
+  margin:auto;
+  background:#11141c;
+  border-top:1px solid #292f3d;
+  display:flex;
+  justify-content:space-around;
+  padding:12px 5px;
+}
+.nav button{
+  background:none;
+  border:0;
+  color:#8991a3;
+  font-size:12px;
+}
+.nav .active{color:#f5b82e}
+.hidden{display:none}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <div class="header">
+    <div class="logo">METHRA ⛏️</div>
+    <div>🪙</div>
+  </div>
+
+  <div class="card">
+    <div class="muted">MTH Balance</div>
+    <div class="balance" id="balance">0 MTH</div>
+
+    <div class="stats">
+      <div class="item">
+        <div class="muted">Mining Rate</div>
+        <b>1 MTH/hour</b>
+      </div>
+
+      <div class="item">
+        <div class="muted">Session</div>
+        <b>8 Hours</b>
+      </div>
+    </div>
+
+    <div class="muted" style="margin-top:20px">
+      Mining time: <span id="timer">08:00:00</span>
+    </div>
+
+    <div class="progress">
+      <div class="bar" id="bar"></div>
+    </div>
+
+    <button class="mine-btn" id="mineBtn" onclick="startMining()">
+      ⛏️ START MINING
+    </button>
+  </div>
+
+  <div class="card">
+    <div class="section-title">🎁 Daily Bonus</div>
+    <div class="muted">Claim your daily reward</div>
+    <button class="small-btn" onclick="claimBonus()" style="margin-top:12px">
+      CLAIM +50 MTH
+    </button>
+  </div>
+
+  <div class="card">
+    <div class="section-title">👥 Referrals</div>
+    <div class="muted">150 MTH per successful referral</div>
+
+    <div style="margin-top:15px">
+      Referrals: <b id="referrals">0</b>
+    </div>
+
+    <div style="margin-top:8px">
+      Referral earnings: <b id="refEarn">0 MTH</b>
+    </div>
+
+    <button class="mine-btn" onclick="invite()">
+      👥 INVITE FRIENDS
+    </button>
+  </div>
