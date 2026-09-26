@@ -778,10 +778,49 @@ function openX(){
 
 function verifyTask(type){
 
-  alert(
-    "Verification is not connected yet.\n\n" +
-    "Production version requires a secure backend."
-  );
+  if(type !== "telegram"){
+    alert("X verification is not connected yet.");
+    return;
+  }
+
+  if(!window.Telegram || !Telegram.WebApp || !Telegram.WebApp.initDataUnsafe.user){
+    alert("Please open METHRA inside Telegram.");
+    return;
+  }
+
+  const userId =
+    Telegram.WebApp.initDataUnsafe.user.id;
+
+  const apiUrl =
+    "https://methra-api.methmikadul.workers.dev/?user_id=" +
+    encodeURIComponent(userId);
+
+  fetch(apiUrl)
+    .then(response => response.json())
+    .then(data => {
+
+      if(data.ok && data.result){
+
+        const status = data.result.status;
+
+        if(
+          status === "member" ||
+          status === "administrator" ||
+          status === "creator"
+        ){
+          alert("✅ Telegram membership verified!");
+        }else{
+          alert("❌ Please join METHRA Community first.");
+        }
+
+      }else{
+        alert("Verification failed.");
+      }
+
+    })
+    .catch(error => {
+      alert("Connection error. Please try again.");
+    });
 }
 
 
