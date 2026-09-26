@@ -3,98 +3,198 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>METHRA Mining</title>
+<title>METHRA — Mine • Earn • Grow</title>
 
-<style>z
-*{box-sizing:border-box}
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
 body{
-  margin:0;
   font-family:Arial,sans-serif;
-  background:#090b10;
+  background:#080808;
   color:#fff;
+  min-height:100vh;
+  padding-bottom:85px;
 }
+
 .app{
   max-width:480px;
   margin:auto;
-  min-height:100vh;
-  padding:20px 16px 90px;
+  padding:18px;
 }
+
 .header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+  text-align:center;
+  padding:12px 0 22px;
 }
+
 .logo{
-  font-size:26px;
-  font-weight:800;
-  color:#f5b82e;
+  font-size:30px;
+  font-weight:900;
+  color:#f5b400;
+  letter-spacing:3px;
 }
+
+.sub{
+  color:#888;
+  font-size:12px;
+  margin-top:5px;
+}
+
+.page{display:none}
+.page.active{display:block}
+
 .card{
-  background:#151923;
-  border:1px solid #292f3d;
-  border-radius:20px;
-  padding:20px;
-  margin-top:16px;
+  background:#121212;
+  border:1px solid #242424;
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:15px;
 }
+
 .balance{
+  text-align:center;
+}
+
+.balance small{
+  color:#888;
+}
+
+.amount{
   font-size:38px;
   font-weight:800;
   margin:8px 0;
+  color:#f5b400;
 }
-.muted{color:#8e96a8}
-.mine-btn{
-  width:100%;
-  border:0;
-  border-radius:16px;
-  padding:17px;
-  margin-top:18px;
-  background:#f5b82e;
-  color:#111;
-  font-size:18px;
-  font-weight:800;
+
+.unit{
+  color:#aaa;
 }
+
+.mineCircle{
+  width:190px;
+  height:190px;
+  border-radius:50%;
+  margin:22px auto;
+  border:7px solid #f5b400;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  box-shadow:0 0 35px rgba(245,180,0,.18);
+}
+
+.mineCircle b{
+  font-size:30px;
+}
+
+.mineCircle span{
+  color:#999;
+  font-size:12px;
+  margin-top:6px;
+}
+
 .progress{
-  height:10px;
-  background:#292f3d;
+  height:9px;
+  background:#252525;
   border-radius:20px;
-  margin-top:18px;
   overflow:hidden;
+  margin:15px 0;
 }
-.bar{
+
+.progressBar{
   height:100%;
   width:0%;
-  background:#f5b82e;
+  background:#f5b400;
+  transition:.5s;
 }
-.stats{
-  display:flex;
-  justify-content:space-between;
-  margin-top:14px;
+
+.timer{
+  text-align:center;
+  color:#aaa;
+  font-size:14px;
 }
-.item{
-  background:#1b202c;
-  padding:12px;
-  border-radius:12px;
-  width:48%;
-}
-.section-title{
-  font-size:20px;
+
+.btn{
+  width:100%;
+  border:0;
+  border-radius:13px;
+  padding:14px;
+  margin-top:10px;
   font-weight:700;
-  margin-bottom:12px;
+  font-size:15px;
+  cursor:pointer;
+  background:#f5b400;
+  color:#080808;
 }
-.task{
+
+.btn.secondary{
+  background:#242424;
+  color:#fff;
+}
+
+.btn:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+.title{
+  font-size:21px;
+  font-weight:800;
+  margin-bottom:5px;
+}
+
+.desc{
+  color:#888;
+  font-size:13px;
+  line-height:1.5;
+}
+
+.row{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:14px 0;
-  border-bottom:1px solid #292f3d;
+  gap:10px;
 }
-.small-btn{
-  border:0;
-  border-radius:10px;
+
+.reward{
+  color:#f5b400;
+  font-weight:bold;
+}
+
+.task{
+  background:#181818;
+  border-radius:14px;
+  padding:14px;
+  margin-top:12px;
+}
+
+.task button{
+  width:auto;
   padding:9px 14px;
-  background:#f5b82e;
-  font-weight:700;
+  margin:8px 0 0;
 }
+
+.walletAddress{
+  background:#0b0b0b;
+  padding:13px;
+  border-radius:12px;
+  color:#888;
+  font-size:12px;
+  word-break:break-all;
+  margin-top:12px;
+}
+
+.notice{
+  background:#19150a;
+  border:1px solid #40350d;
+  color:#c8ad58;
+  padding:12px;
+  border-radius:12px;
+  font-size:12px;
+  line-height:1.5;
+  margin-bottom:15px;
+}
+
 .nav{
   position:fixed;
   bottom:0;
@@ -102,20 +202,42 @@ body{
   right:0;
   max-width:480px;
   margin:auto;
-  background:#11141c;
-  border-top:1px solid #292f3d;
+  height:72px;
+  background:#111;
+  border-top:1px solid #292929;
   display:flex;
   justify-content:space-around;
-  padding:12px 5px;
+  z-index:10;
 }
+
 .nav button{
+  flex:1;
   background:none;
   border:0;
-  color:#8991a3;
-  font-size:12px;
+  color:#777;
+  font-size:11px;
 }
-.nav .active{color:#f5b82e}
-.hidden{display:none}
+
+.nav button span{
+  display:block;
+  font-size:22px;
+  margin-bottom:4px;
+}
+
+.nav button.active{
+  color:#f5b400;
+}
+
+input{
+  width:100%;
+  padding:13px;
+  background:#0b0b0b;
+  border:1px solid #333;
+  color:white;
+  border-radius:12px;
+  outline:none;
+  margin-top:10px;
+}
 </style>
 </head>
 
@@ -124,60 +246,613 @@ body{
 <div class="app">
 
   <div class="header">
-    <div class="logo">METHRA ⛏️</div>
-    <div>🪙</div>
+    <div class="logo">METHRA</div>
+    <div class="sub">MINE • EARN • GROW</div>
   </div>
 
-  <div class="card">
-    <div class="muted">MTH Balance</div>
-    <div class="balance" id="balance">0 MTH</div>
+  <!-- HOME -->
+  <section id="home" class="page active">
 
-    <div class="stats">
-      <div class="item">
-        <div class="muted">Mining Rate</div>
-        <b>1 MTH/hour</b>
+    <div class="card balance">
+      <small>Your MTH Balance</small>
+      <div class="amount" id="balance">0</div>
+      <div class="unit">MTH</div>
+    </div>
+
+    <div class="card">
+
+      <div class="mineCircle">
+        <b id="mined">0.00</b>
+        <span>MTH MINED</span>
       </div>
 
-      <div class="item">
-        <div class="muted">Session</div>
-        <b>8 Hours</b>
+      <div class="timer" id="timer">
+        Mining not started
+      </div>
+
+      <div class="progress">
+        <div class="progressBar" id="progress"></div>
+      </div>
+
+      <div class="desc" style="text-align:center">
+        Mining rate: <b>1 MTH / hour</b><br>
+        Session: <b>8 hours</b>
+      </div>
+
+      <button class="btn" id="mineBtn" onclick="startMining()">
+        ⛏️ Start Mining
+      </button>
+
+      <button class="btn secondary" id="claimBtn"
+              onclick="claimMining()" style="display:none">
+        🎁 Claim 8 MTH
+      </button>
+
+    </div>
+
+    <div class="card">
+      <div class="title">🎁 Daily Bonus</div>
+      <div class="desc">
+        Claim your daily bonus once every 24 hours.
+      </div>
+      <button class="btn secondary" id="dailyBtn"
+              onclick="dailyBonus()">
+        Claim +50 MTH
+      </button>
+    </div>
+
+  </section>
+
+
+  <!-- INVITE -->
+  <section id="invite" class="page">
+
+    <div class="card">
+      <div class="title">👥 Invite Friends</div>
+      <div class="desc">
+        Invite new users to METHRA and earn
+        <b class="reward">150 MTH</b> for each successful referral.
+      </div>
+
+      <input id="refLink" readonly>
+
+      <button class="btn" onclick="copyReferral()">
+        📋 Copy Referral Link
+      </button>
+
+      <button class="btn secondary" onclick="shareReferral()">
+        🚀 Share Invite
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="row">
+        <div>
+          <div class="title">Successful Referrals</div>
+          <div class="desc">Verified referrals</div>
+        </div>
+
+        <div style="text-align:right">
+          <div class="amount" style="font-size:26px" id="refCount">0</div>
+          <div class="unit">Users</div>
+        </div>
       </div>
     </div>
 
-    <div class="muted" style="margin-top:20px">
-      Mining time: <span id="timer">08:00:00</span>
+    <div class="notice">
+      Referral rewards are verified by the METHRA backend in the
+      production version. This demo does not create real referral
+      rewards from the browser.
     </div>
 
-    <div class="progress">
-      <div class="bar" id="bar"></div>
+  </section>
+
+
+  <!-- TASKS -->
+  <section id="tasks" class="page">
+
+    <div class="card">
+      <div class="title">🎯 Tasks</div>
+      <div class="desc">
+        Complete community tasks and earn MTH.
+      </div>
+
+      <div class="task">
+        <div class="row">
+          <div>
+            <b>Join METHRA Community</b>
+            <div class="reward">+100 MTH</div>
+          </div>
+        </div>
+
+        <button class="btn secondary"
+                onclick="openTelegram()">
+          Join
+        </button>
+
+        <button class="btn"
+                onclick="verifyTask('telegram')">
+          Verify
+        </button>
+      </div>
+
+
+      <div class="task">
+        <div class="row">
+          <div>
+            <b>Follow METHRA on X</b>
+            <div class="reward">+100 MTH</div>
+          </div>
+        </div>
+
+        <button class="btn secondary"
+                onclick="openX()">
+          Follow
+        </button>
+
+        <button class="btn"
+                onclick="verifyTask('x')">
+          Verify
+        </button>
+      </div>
+
     </div>
 
-    <button class="mine-btn" id="mineBtn" onclick="startMining()">
-      ⛏️ START MINING
-    </button>
-  </div>
-
-  <div class="card">
-    <div class="section-title">🎁 Daily Bonus</div>
-    <div class="muted">Claim your daily reward</div>
-    <button class="small-btn" onclick="claimBonus()" style="margin-top:12px">
-      CLAIM +50 MTH
-    </button>
-  </div>
-
-  <div class="card">
-    <div class="section-title">👥 Referrals</div>
-    <div class="muted">150 MTH per successful referral</div>
-
-    <div style="margin-top:15px">
-      Referrals: <b id="referrals">0</b>
+    <div class="notice">
+      Task verification shown here is a demo. Real verification
+      requires a secure backend/API.
     </div>
 
-    <div style="margin-top:8px">
-      Referral earnings: <b id="refEarn">0 MTH</b>
+  </section>
+
+
+  <!-- WALLET -->
+  <section id="wallet" class="page">
+
+    <div class="card">
+      <div class="title">👛 Wallet</div>
+
+      <div class="balance" style="margin-top:15px">
+        <small>Available Balance</small>
+        <div class="amount" style="font-size:32px">
+          <span id="walletBalance">0</span>
+        </div>
+        <div class="unit">MTH</div>
+      </div>
+
+      <button class="btn" onclick="connectWallet()">
+        🔗 Connect TON Wallet
+      </button>
+
+      <div id="walletStatus" class="walletAddress">
+        Wallet not connected
+      </div>
     </div>
 
-    <button class="mine-btn" onclick="invite()">
-      👥 INVITE FRIENDS
-    </button>
-  </div>
+
+    <div class="card">
+      <div class="title">💸 Withdraw</div>
+      <div class="desc">
+        Minimum withdrawal: <b>2000 MTH</b><br>
+        Estimated value: <b>$0.80+</b> — not guaranteed.
+      </div>
+
+      <button class="btn secondary"
+              onclick="withdrawDemo()">
+        Request Withdrawal
+      </button>
+    </div>
+
+
+    <div class="card">
+      <div class="title">💰 Deposit</div>
+
+      <div class="notice">
+        Deposit functionality is currently a demo.
+        Do not send real funds to this app.
+      </div>
+
+      <button class="btn secondary"
+              onclick="depositDemo()">
+        Deposit
+      </button>
+    </div>
+
+  </section>
+
+</div>
+
+
+<!-- NAVIGATION -->
+<nav class="nav">
+
+  <button class="active" onclick="showPage('home',this)">
+    <span>🏠</span>
+    Home
+  </button>
+
+  <button onclick="showPage('invite',this)">
+    <span>👥</span>
+    Invite
+  </button>
+
+  <button onclick="showPage('tasks',this)">
+    <span>🎯</span>
+    Tasks
+  </button>
+
+  <button onclick="showPage('wallet',this)">
+    <span>👛</span>
+    Wallet
+  </button>
+
+</nav>
+
+
+<script>
+
+/* =========================
+   METHRA DEMO DATA
+========================= */
+
+const SESSION = 8 * 60 * 60 * 1000;
+const RATE = 1;
+
+let balance = Number(localStorage.getItem("mth_balance") || 0);
+let miningStart = Number(localStorage.getItem("mining_start") || 0);
+let miningRunning =
+  localStorage.getItem("mining_running") === "true";
+
+let dailyClaim =
+  localStorage.getItem("daily_claim") || "";
+
+function save(){
+  localStorage.setItem("mth_balance", balance);
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function showPage(page, button){
+
+  document.querySelectorAll(".page")
+    .forEach(p => p.classList.remove("active"));
+
+  document.getElementById(page)
+    .classList.add("active");
+
+  document.querySelectorAll(".nav button")
+    .forEach(b => b.classList.remove("active"));
+
+  button.classList.add("active");
+
+  updateUI();
+}
+
+
+/* =========================
+   MINING
+========================= */
+
+function startMining(){
+
+  if(miningRunning) return;
+
+  miningStart = Date.now();
+
+  miningRunning = true;
+
+  localStorage.setItem(
+    "mining_start",
+    miningStart
+  );
+
+  localStorage.setItem(
+    "mining_running",
+    "true"
+  );
+
+  updateUI();
+}
+
+
+function claimMining(){
+
+  if(!miningRunning) return;
+
+  const elapsed = Date.now() - miningStart;
+
+  if(elapsed < SESSION) return;
+
+  balance += 8;
+
+  save();
+
+  miningRunning = false;
+
+  localStorage.removeItem("mining_start");
+  localStorage.setItem(
+    "mining_running",
+    "false"
+  );
+
+  updateUI();
+
+  alert("🎉 8 MTH claimed!");
+}
+
+
+function updateMining(){
+
+  if(!miningRunning){
+
+    document.getElementById("mined").innerText =
+      "0.00";
+
+    document.getElementById("timer").innerText =
+      "Mining not started";
+
+    document.getElementById("progress").style.width =
+      "0%";
+
+    document.getElementById("mineBtn").style.display =
+      "block";
+
+    document.getElementById("claimBtn").style.display =
+      "none";
+
+    return;
+  }
+
+  const elapsed =
+    Date.now() - miningStart;
+
+  const completed =
+    elapsed >= SESSION;
+
+  const secondsLeft =
+    Math.max(
+      0,
+      Math.floor((SESSION - elapsed) / 1000)
+    );
+
+  const hours =
+    Math.floor(secondsLeft / 3600);
+
+  const minutes =
+    Math.floor((secondsLeft % 3600) / 60);
+
+  const seconds =
+    secondsLeft % 60;
+
+  const mined =
+    Math.min(
+      8,
+      (elapsed / 3600000) * RATE
+    );
+
+  document.getElementById("mined")
+    .innerText = mined.toFixed(2);
+
+  document.getElementById("progress")
+    .style.width =
+      Math.min(100, elapsed / SESSION * 100) + "%";
+
+
+  if(completed){
+
+    document.getElementById("timer")
+      .innerText =
+      "✅ Mining completed";
+
+    document.getElementById("mineBtn")
+      .style.display = "none";
+
+    document.getElementById("claimBtn")
+      .style.display = "block";
+
+  }else{
+
+    document.getElementById("timer")
+      .innerText =
+      `${hours}h ${minutes}m ${seconds}s remaining`;
+
+    document.getElementById("mineBtn")
+      .style.display = "none";
+
+    document.getElementById("claimBtn")
+      .style.display = "none";
+  }
+}
+
+
+/* =========================
+   DAILY BONUS
+========================= */
+
+function dailyBonus(){
+
+  const today =
+    new Date().toISOString().slice(0,10);
+
+  if(dailyClaim === today){
+
+    alert("Daily bonus already claimed today.");
+    return;
+  }
+
+  balance += 50;
+
+  dailyClaim = today;
+
+  localStorage.setItem(
+    "daily_claim",
+    today
+  );
+
+  save();
+
+  updateUI();
+
+  alert("🎁 +50 MTH added!");
+}
+
+
+/* =========================
+   REFERRAL
+========================= */
+
+function generateReferral(){
+
+  const id =
+    localStorage.getItem("methra_id")
+    || Math.random().toString(36)
+      .substring(2,10);
+
+  localStorage.setItem(
+    "methra_id",
+    id
+  );
+
+  document.getElementById("refLink")
+    .value =
+    "https://t.me/METHRA_MiningBot?start=" + id;
+}
+
+function copyReferral(){
+
+  const input =
+    document.getElementById("refLink");
+
+  navigator.clipboard.writeText(
+    input.value
+  );
+
+  alert("Referral link copied!");
+}
+
+function shareReferral(){
+
+  const link =
+    document.getElementById("refLink").value;
+
+  const text =
+    "Join METHRA 🚀 Mine • Earn • Grow\n\n" +
+    link;
+
+  if(navigator.share){
+
+    navigator.share({
+      title:"METHRA",
+      text:text
+    });
+
+  }else{
+
+    copyReferral();
+  }
+}
+
+
+/* =========================
+   TASKS
+========================= */
+
+function openTelegram(){
+
+  window.open(
+    "https://t.me/METHRA_Community",
+    "_blank"
+  );
+}
+
+function openX(){
+
+  window.open(
+    "https://x.com/MTHMine",
+    "_blank"
+  );
+}
+
+function verifyTask(type){
+
+  alert(
+    "Verification is not connected yet.\n\n" +
+    "Production version requires a secure backend."
+  );
+}
+
+
+/* =========================
+   WALLET
+========================= */
+
+function connectWallet(){
+
+  document.getElementById("walletStatus")
+    .innerText =
+    "TON Connect integration will be added in the production version.";
+
+  alert(
+    "TON Wallet connection is currently a demo."
+  );
+}
+
+function withdrawDemo(){
+
+  if(balance < 2000){
+
+    alert(
+      "Minimum withdrawal is 2000 MTH."
+    );
+
+    return;
+  }
+
+  alert(
+    "Withdrawal system is not connected yet."
+  );
+}
+
+function depositDemo(){
+
+  alert(
+    "Deposit is currently disabled.\n\n" +
+    "Do not send real funds to this demo."
+  );
+}
+
+
+/* =========================
+   UI
+========================= */
+
+function updateUI(){
+
+  document.getElementById("balance")
+    .innerText =
+    balance.toFixed(2);
+
+  document.getElementById("walletBalance")
+    .innerText =
+    balance.toFixed(2);
+
+  updateMining();
+}
+
+
+/* =========================
+   START
+========================= */
+
+generateReferral();
+updateUI();
+
+setInterval(updateUI,1000);
+
+</script>
+
+</body>
+</html>
