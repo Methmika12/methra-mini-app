@@ -150,6 +150,11 @@ background:#242424;
 color:#fff;
 }
 
+.btn:disabled{
+opacity:.45;
+cursor:not-allowed;
+}
+
 .title{
 font-size:21px;
 font-weight:800;
@@ -208,6 +213,17 @@ line-height:1.5;
 margin-bottom:15px;
 }
 
+.success{
+background:#0d1b10;
+border:1px solid #1f5a2c;
+color:#8bd39a;
+padding:12px;
+border-radius:12px;
+font-size:12px;
+line-height:1.5;
+margin-top:12px;
+}
+
 .nav{
 position:fixed;
 bottom:0;
@@ -250,6 +266,10 @@ color:white;
 border-radius:12px;
 outline:none;
 margin-top:10px;
+}
+
+input:focus{
+border-color:#f5b400;
 }
 
 </style>
@@ -623,7 +643,7 @@ MTH
 class="btn"
 onclick="connectWallet()">
 
-🔗 Connect TON Wallet
+🔗 Add TON Wallet Address
 
 </button>
 
@@ -632,7 +652,7 @@ onclick="connectWallet()">
 id="walletStatus"
 class="walletAddress">
 
-Wallet not connected
+Wallet address not added
 
 </div>
 
@@ -650,22 +670,44 @@ Wallet not connected
 Minimum withdrawal:
 <b>2000 MTH</b>
 
-<br>
+<br><br>
 
-Estimated value:
-<b>$0.80+</b>
-— not guaranteed.
+Withdrawal requests are reviewed manually.
 
 </div>
 
 
-<button
-class="btn secondary"
-onclick="withdrawDemo()">
+<input
+id="withdrawWallet"
+placeholder="Enter your wallet address"
+>
 
-Request Withdrawal
+
+<input
+id="withdrawAmount"
+type="number"
+min="2000"
+placeholder="Enter MTH amount"
+>
+
+
+<button
+class="btn"
+id="withdrawBtn"
+onclick="submitWithdrawal()">
+
+💸 Request Withdrawal
 
 </button>
+
+
+<div
+id="withdrawStatus"
+class="walletAddress">
+
+Withdrawal status: Not requested
+
+</div>
 
 </div>
 
@@ -678,18 +720,20 @@ Request Withdrawal
 
 <div class="notice">
 
-Deposit functionality is currently disabled.
-<br>
-Do not send real funds to this app.
+Deposit feature is coming soon.
+
+<br><br>
+
+Please do not send funds to this app while deposits are unavailable.
 
 </div>
 
 
 <button
 class="btn secondary"
-onclick="depositDemo()">
+onclick="depositSoon()">
 
-Deposit
+🔜 Deposit — Soon
 
 </button>
 
@@ -753,6 +797,11 @@ const SESSION =
 8 * 60 * 60 * 1000;
 
 const RATE = 1;
+
+const MIN_WITHDRAWAL = 2000;
+
+const API_BASE =
+"https://methra-api.methmikadul.workers.dev";
 
 
 let balance =
@@ -1200,10 +1249,6 @@ TELEGRAM VERIFY
 
 async function verifyTelegram(){
 
-/*
-Check Telegram Mini App
-*/
-
 if(
 !window.Telegram ||
 !Telegram.WebApp
@@ -1243,7 +1288,8 @@ user.id;
 
 
 const apiUrl =
-"https://methra-api.methmikadul.workers.dev/?user_id=" +
+API_BASE +
+"/?user_id=" +
 encodeURIComponent(userId);
 
 
@@ -1340,7 +1386,7 @@ error
 
 alert(
 "❌ Verification connection error.\n\n" +
-"Please make sure you joined METHRA Community and try again."
+"Please try again later."
 );
 
 }
@@ -1366,7 +1412,7 @@ return;
 if(type === "x"){
 
 alert(
-"X verification is not connected yet."
+"𝕏 Follow verification is not connected yet."
 );
 
 return;
@@ -1445,25 +1491,22 @@ WALLET
 
 function connectWallet(){
 
+const input =
 document.getElementById(
-"walletStatus"
-).innerText =
-"TON Connect integration will be added in the production version.";
-
-
-alert(
-"TON Wallet connection is currently a demo."
+"withdrawWallet"
 );
+
+input.focus();
 
 }
 
 
-function withdrawDemo(){
+async function submitWithdrawal(){
 
-if(balance < 2000){
+if(balance < MIN_WITHDRAWAL){
 
 alert(
-"Minimum withdrawal is 2000 MTH."
+"❌ You need at least 2000 MTH to request a withdrawal."
 );
 
 return;
@@ -1471,18 +1514,189 @@ return;
 }
 
 
+const wallet =
+document.getElementById(
+"withdrawWallet"
+).value.trim();
+
+
+const amount =
+Number(
+document.getElementById(
+"withdrawAmount"
+).value
+);
+
+
+if(!wallet){
+
 alert(
-"Withdrawal system is not connected yet."
+"⚠️ Please enter your wallet address."
+);
+
+return;
+
+}
+
+
+if(!amount || amount < MIN_WITHDRAWAL){
+
+alert(
+"⚠️ Minimum withdrawal is 2000 MTH."
+);
+
+return;
+
+}
+
+
+if(amount > balance){
+
+alert(
+"⚠️ Withdrawal amount cannot exceed your MTH balance."
+);
+
+return;
+
+}
+
+
+const tgUser =
+window.Telegram &&
+Telegram.WebApp &&
+Telegram.WebApp.initDataUnsafe &&
+Telegram.WebApp.initDataUnsafe.user;
+
+
+if(!tgUser){
+
+alert(
+"❌ Please open METHRA inside Telegram."
+);
+
+return;
+
+}
+
+
+const username =
+tgUser.username || "No username";
+
+
+const userId =
+tgUser.id;
+
+
+const button =
+document.getElementById(
+"withdrawBtn"
+);
+
+
+button.disabled = true;
+
+button.innerText =
+"⏳ Sending...";
+
+
+document.getElementById(
+"withdrawStatus"
+).innerText =
+"⏳ Withdrawal request is being submitted...";
+
+
+try{
+
+const response =
+await fetch(
+API_BASE + "/withdraw",
+{
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+user_id:userId,
+
+username:username,
+
+amount:amount,
+
+wallet:wallet
+
+})
+
+}
+);
+
+
+const data =
+await response.json();
+
+
+if(!data.ok){
+
+throw new Error(
+data.error ||
+"Request failed"
 );
 
 }
 
 
-function depositDemo(){
+document.getElementById(
+"withdrawStatus"
+).innerText =
+"⏳ Withdrawal request: Pending Review";
+
 
 alert(
-"Deposit is currently disabled.\n\n" +
-"Do not send real funds to this demo."
+"✅ Withdrawal request submitted!\n\n" +
+"Your request is now pending review."
+);
+
+
+}catch(error){
+
+console.error(error);
+
+
+document.getElementById(
+"withdrawStatus"
+).innerText =
+"❌ Request failed";
+
+
+alert(
+"❌ Could not submit the request.\n\n" +
+"Please try again later."
+);
+
+
+}finally{
+
+button.disabled = false;
+
+button.innerText =
+"💸 Request Withdrawal";
+
+}
+
+}
+
+
+/* =========================
+DEPOSIT
+========================= */
+
+function depositSoon(){
+
+alert(
+"🔜 Deposit feature is coming soon.\n\n" +
+"Please do not send funds while deposits are unavailable."
 );
 
 }
