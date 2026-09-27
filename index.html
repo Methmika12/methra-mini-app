@@ -1,15 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+>
 
 <title>METHRA — Mine • Earn • Grow</title>
 
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+
+*{
+box-sizing:border-box;
+margin:0;
+padding:0
+}
 
 body{
 font-family:Arial,sans-serif;
@@ -43,8 +53,13 @@ font-size:12px;
 margin-top:5px;
 }
 
-.page{display:none}
-.page.active{display:block}
+.page{
+display:none
+}
+
+.page.active{
+display:block
+}
 
 .card{
 background:#121212;
@@ -54,8 +69,13 @@ padding:18px;
 margin-bottom:15px;
 }
 
-.balance{text-align:center}
-.balance small{color:#888}
+.balance{
+text-align:center
+}
+
+.balance small{
+color:#888
+}
 
 .amount{
 font-size:38px;
@@ -64,7 +84,9 @@ margin:8px 0;
 color:#f5b400;
 }
 
-.unit{color:#aaa}
+.unit{
+color:#aaa
+}
 
 .mineCircle{
 width:190px;
@@ -79,7 +101,9 @@ flex-direction:column;
 box-shadow:0 0 35px rgba(245,180,0,.18);
 }
 
-.mineCircle b{font-size:30px}
+.mineCircle b{
+font-size:30px
+}
 
 .mineCircle span{
 color:#999;
@@ -227,7 +251,9 @@ border-radius:12px;
 outline:none;
 margin-top:10px;
 }
+
 </style>
+
 </head>
 
 <body>
@@ -235,8 +261,13 @@ margin-top:10px;
 <div class="app">
 
 <div class="header">
+
 <div class="logo">METHRA</div>
-<div class="sub">MINE • EARN • GROW</div>
+
+<div class="sub">
+MINE • EARN • GROW
+</div>
+
 </div>
 
 
@@ -245,42 +276,87 @@ margin-top:10px;
 <section id="home" class="page active">
 
 <div class="card balance">
+
 <small>Your MTH Balance</small>
-<div class="amount" id="balance">0</div>
-<div class="unit">MTH</div>
+
+<div
+class="amount"
+id="balance">
+0
 </div>
+
+<div class="unit">
+MTH
+</div>
+
+</div>
+
 
 <div class="card">
 
 <div class="mineCircle">
-<b id="mined">0.00</b>
-<span>MTH MINED</span>
+
+<b id="mined">
+0.00
+</b>
+
+<span>
+MTH MINED
+</span>
+
 </div>
 
-<div class="timer" id="timer">
+
+<div
+class="timer"
+id="timer">
 Mining not started
 </div>
 
+
 <div class="progress">
-<div class="progressBar" id="progress"></div>
+
+<div
+class="progressBar"
+id="progress">
 </div>
 
-<div class="desc" style="text-align:center">
-Mining rate: <b>1 MTH / hour</b><br>
-Session: <b>8 hours</b>
 </div>
 
-<button class="btn"
+
+<div
+class="desc"
+style="text-align:center">
+
+Mining rate:
+<b>1 MTH / hour</b>
+
+<br>
+
+Session:
+<b>8 hours</b>
+
+</div>
+
+
+<button
+class="btn"
 id="mineBtn"
 onclick="startMining()">
+
 ⛏️ Start Mining
+
 </button>
 
-<button class="btn secondary"
+
+<button
+class="btn secondary"
 id="claimBtn"
 onclick="claimMining()"
 style="display:none">
+
 🎁 Claim 8 MTH
+
 </button>
 
 </div>
@@ -288,15 +364,20 @@ style="display:none">
 
 <div class="card">
 
-<div class="title">🎁 Daily Bonus</div>
+<div class="title">
+🎁 Daily Bonus
+</div>
 
 <div class="desc">
 Claim your daily bonus once every 24 hours.
 </div>
 
-<button class="btn secondary"
+<button
+class="btn secondary"
 onclick="dailyBonus()">
+
 Claim +50 MTH
+
 </button>
 
 </div>
@@ -310,24 +391,40 @@ Claim +50 MTH
 
 <div class="card">
 
-<div class="title">👥 Invite Friends</div>
+<div class="title">
+👥 Invite Friends
+</div>
 
 <div class="desc">
+
 Invite new users to METHRA and earn
 <b class="reward">150 MTH</b>
 for each successful referral.
+
 </div>
 
-<input id="refLink" readonly>
 
-<button class="btn"
+<input
+id="refLink"
+readonly
+>
+
+
+<button
+class="btn"
 onclick="copyReferral()">
+
 📋 Copy Referral Link
+
 </button>
 
-<button class="btn secondary"
+
+<button
+class="btn secondary"
 onclick="shareReferral()">
+
 🚀 Share Invite
+
 </button>
 
 </div>
@@ -338,30 +435,37 @@ onclick="shareReferral()">
 <div class="row">
 
 <div>
-<div class="title">Successful Referrals</div>
-<div class="desc">Verified referrals</div>
+
+<div class="title">
+Successful Referrals
 </div>
+
+<div class="desc">
+Verified referrals
+</div>
+
+</div>
+
 
 <div style="text-align:right">
 
-<div class="amount"
+<div
+class="amount"
 style="font-size:26px"
 id="refCount">
+
 0
-</div>
-
-<div class="unit">Users</div>
 
 </div>
 
+<div class="unit">
+Users
 </div>
 
 </div>
 
+</div>
 
-<div class="notice">
-Referral tracking is currently a demo.
-Real referral rewards require a secure backend.
 </div>
 
 </section>
@@ -373,83 +477,108 @@ Real referral rewards require a secure backend.
 
 <div class="card">
 
-<div class="title">🎯 Tasks</div>
+<div class="title">
+🎯 Tasks
+</div>
 
 <div class="desc">
 Complete community tasks and earn MTH.
 </div>
 
 
-<!-- TELEGRAM TASK -->
+<!-- TELEGRAM -->
 
 <div class="task">
 
 <div class="row">
 
 <div>
-<b>Join METHRA Community</b>
-<div class="reward">+100 MTH</div>
+
+<b>
+Join METHRA Community
+</b>
+
+<div class="reward">
++100 MTH
 </div>
 
 </div>
 
+</div>
 
-<button class="btn secondary"
+
+<button
+class="btn secondary"
 onclick="openTelegram()">
+
 Join
+
 </button>
 
 
-<button class="btn"
+<button
+class="btn"
 id="verifyTelegramBtn"
 onclick="verifyTask('telegram')">
+
 Verify
+
 </button>
 
 
-<button class="btn"
+<button
+class="btn"
 id="claimTelegramBtn"
 onclick="claimTelegramReward()"
 style="display:none">
+
 🎁 Claim +100 MTH
+
 </button>
 
 </div>
 
 
-<!-- X TASK -->
+<!-- X -->
 
 <div class="task">
 
 <div class="row">
 
 <div>
-<b>Follow METHRA on X</b>
-<div class="reward">+100 MTH</div>
+
+<b>
+Follow METHRA on X
+</b>
+
+<div class="reward">
++100 MTH
 </div>
 
 </div>
 
+</div>
 
-<button class="btn secondary"
+
+<button
+class="btn secondary"
 onclick="openX()">
+
 Follow
+
 </button>
 
 
-<button class="btn"
+<button
+class="btn"
 onclick="verifyTask('x')">
+
 Verify
+
 </button>
 
 </div>
 
-</div>
-
-
-<div class="notice">
-Telegram membership verification is connected.
-X verification is not connected yet.
 </div>
 
 </section>
@@ -461,33 +590,50 @@ X verification is not connected yet.
 
 <div class="card">
 
-<div class="title">👛 Wallet</div>
+<div class="title">
+👛 Wallet
+</div>
 
-<div class="balance" style="margin-top:15px">
+<div
+class="balance"
+style="margin-top:15px">
 
-<small>Available Balance</small>
+<small>
+Available Balance
+</small>
 
-<div class="amount"
+<div
+class="amount"
 style="font-size:32px">
 
-<span id="walletBalance">0</span>
+<span id="walletBalance">
+0
+</span>
 
 </div>
 
-<div class="unit">MTH</div>
+<div class="unit">
+MTH
+</div>
 
 </div>
 
 
-<button class="btn"
+<button
+class="btn"
 onclick="connectWallet()">
+
 🔗 Connect TON Wallet
+
 </button>
 
 
-<div id="walletStatus"
+<div
+id="walletStatus"
 class="walletAddress">
+
 Wallet not connected
+
 </div>
 
 </div>
@@ -495,16 +641,30 @@ Wallet not connected
 
 <div class="card">
 
-<div class="title">💸 Withdraw</div>
+<div class="title">
+💸 Withdraw
+</div>
 
 <div class="desc">
-Minimum withdrawal: <b>2000 MTH</b><br>
-Estimated value: <b>$0.80+</b> — not guaranteed.
+
+Minimum withdrawal:
+<b>2000 MTH</b>
+
+<br>
+
+Estimated value:
+<b>$0.80+</b>
+— not guaranteed.
+
 </div>
 
-<button class="btn secondary"
+
+<button
+class="btn secondary"
 onclick="withdrawDemo()">
+
 Request Withdrawal
+
 </button>
 
 </div>
@@ -512,16 +672,25 @@ Request Withdrawal
 
 <div class="card">
 
-<div class="title">💰 Deposit</div>
-
-<div class="notice">
-Deposit functionality is currently a demo.
-Do not send real funds to this app.
+<div class="title">
+💰 Deposit
 </div>
 
-<button class="btn secondary"
+<div class="notice">
+
+Deposit functionality is currently disabled.
+<br>
+Do not send real funds to this app.
+
+</div>
+
+
+<button
+class="btn secondary"
 onclick="depositDemo()">
+
 Deposit
+
 </button>
 
 </div>
@@ -531,29 +700,44 @@ Deposit
 </div>
 
 
-<!-- NAVIGATION -->
+<!-- NAV -->
 
 <nav class="nav">
 
-<button class="active"
+<button
+class="active"
 onclick="showPage('home',this)">
+
 <span>🏠</span>
 Home
+
 </button>
 
-<button onclick="showPage('invite',this)">
+
+<button
+onclick="showPage('invite',this)">
+
 <span>👥</span>
 Invite
+
 </button>
 
-<button onclick="showPage('tasks',this)">
+
+<button
+onclick="showPage('tasks',this)">
+
 <span>🎯</span>
 Tasks
+
 </button>
 
-<button onclick="showPage('wallet',this)">
+
+<button
+onclick="showPage('wallet',this)">
+
 <span>👛</span>
 Wallet
+
 </button>
 
 </nav>
@@ -565,17 +749,27 @@ Wallet
 METHRA DATA
 ========================= */
 
-const SESSION = 8 * 60 * 60 * 1000;
+const SESSION =
+8 * 60 * 60 * 1000;
+
 const RATE = 1;
 
+
 let balance =
-Number(localStorage.getItem("mth_balance") || 0);
+Number(
+localStorage.getItem("mth_balance") || 0
+);
+
 
 let miningStart =
-Number(localStorage.getItem("mining_start") || 0);
+Number(
+localStorage.getItem("mining_start") || 0
+);
+
 
 let miningRunning =
 localStorage.getItem("mining_running") === "true";
+
 
 let dailyClaim =
 localStorage.getItem("daily_claim") || "";
@@ -609,6 +803,7 @@ p.classList.remove("active")
 document.getElementById(page)
 .classList.add("active");
 
+
 document.querySelectorAll(".nav button")
 .forEach(b =>
 b.classList.remove("active")
@@ -627,21 +822,27 @@ MINING
 
 function startMining(){
 
-if(miningRunning) return;
+if(miningRunning)
+return;
 
-miningStart = Date.now();
+miningStart =
+Date.now();
 
-miningRunning = true;
+miningRunning =
+true;
+
 
 localStorage.setItem(
 "mining_start",
 miningStart
 );
 
+
 localStorage.setItem(
 "mining_running",
 "true"
 );
+
 
 updateUI();
 
@@ -650,36 +851,51 @@ updateUI();
 
 function claimMining(){
 
-if(!miningRunning) return;
+if(!miningRunning)
+return;
+
 
 const elapsed =
 Date.now() - miningStart;
 
+
 if(elapsed < SESSION){
 
-alert("⛏️ Mining is still running.");
+alert(
+"⛏️ Mining is still running."
+);
 
 return;
+
 }
+
 
 balance += 8;
 
 save();
 
-miningRunning = false;
+
+miningRunning =
+false;
+
 
 localStorage.removeItem(
 "mining_start"
 );
+
 
 localStorage.setItem(
 "mining_running",
 "false"
 );
 
+
 updateUI();
 
-alert("🎉 8 MTH claimed!");
+
+alert(
+"🎉 8 MTH claimed!"
+);
 
 }
 
@@ -691,27 +907,36 @@ if(!miningRunning){
 document.getElementById("mined")
 .innerText = "0.00";
 
+
 document.getElementById("timer")
-.innerText = "Mining not started";
+.innerText =
+"Mining not started";
+
 
 document.getElementById("progress")
 .style.width = "0%";
 
+
 document.getElementById("mineBtn")
 .style.display = "block";
+
 
 document.getElementById("claimBtn")
 .style.display = "none";
 
+
 return;
+
 }
 
 
 const elapsed =
 Date.now() - miningStart;
 
+
 const completed =
 elapsed >= SESSION;
+
 
 const secondsLeft =
 Math.max(
@@ -721,16 +946,22 @@ Math.floor(
 )
 );
 
+
 const hours =
-Math.floor(secondsLeft / 3600);
+Math.floor(
+secondsLeft / 3600
+);
+
 
 const minutes =
 Math.floor(
 (secondsLeft % 3600) / 60
 );
 
+
 const seconds =
 secondsLeft % 60;
+
 
 const mined =
 Math.min(
@@ -738,9 +969,11 @@ Math.min(
 (elapsed / 3600000) * RATE
 );
 
+
 document.getElementById("mined")
 .innerText =
 mined.toFixed(2);
+
 
 document.getElementById("progress")
 .style.width =
@@ -756,11 +989,15 @@ document.getElementById("timer")
 .innerText =
 "✅ Mining completed";
 
+
 document.getElementById("mineBtn")
-.style.display = "none";
+.style.display =
+"none";
+
 
 document.getElementById("claimBtn")
-.style.display = "block";
+.style.display =
+"block";
 
 }else{
 
@@ -768,11 +1005,15 @@ document.getElementById("timer")
 .innerText =
 `${hours}h ${minutes}m ${seconds}s remaining`;
 
+
 document.getElementById("mineBtn")
-.style.display = "none";
+.style.display =
+"none";
+
 
 document.getElementById("claimBtn")
-.style.display = "none";
+.style.display =
+"none";
 
 }
 
@@ -786,7 +1027,10 @@ DAILY BONUS
 function dailyBonus(){
 
 const today =
-new Date().toISOString().slice(0,10);
+new Date()
+.toISOString()
+.slice(0,10);
+
 
 if(dailyClaim === today){
 
@@ -795,22 +1039,30 @@ alert(
 );
 
 return;
+
 }
+
 
 balance += 50;
 
-dailyClaim = today;
+dailyClaim =
+today;
+
 
 localStorage.setItem(
 "daily_claim",
 today
 );
 
+
 save();
 
 updateUI();
 
-alert("🎁 +50 MTH added!");
+
+alert(
+"🎁 +50 MTH added!"
+);
 
 }
 
@@ -828,10 +1080,12 @@ Math.random()
 .toString(36)
 .substring(2,10);
 
+
 localStorage.setItem(
 "methra_id",
 id
 );
+
 
 document.getElementById("refLink")
 .value =
@@ -846,11 +1100,19 @@ function copyReferral(){
 const input =
 document.getElementById("refLink");
 
+
+if(
+navigator.clipboard &&
+navigator.clipboard.writeText
+){
+
 navigator.clipboard
 .writeText(input.value)
 .then(() => {
 
-alert("Referral link copied!");
+alert(
+"Referral link copied!"
+);
 
 })
 .catch(() => {
@@ -859,9 +1121,23 @@ input.select();
 
 document.execCommand("copy");
 
-alert("Referral link copied!");
+alert(
+"Referral link copied!"
+);
 
 });
+
+}else{
+
+input.select();
+
+document.execCommand("copy");
+
+alert(
+"Referral link copied!"
+);
+
+}
 
 }
 
@@ -872,9 +1148,11 @@ const link =
 document.getElementById("refLink")
 .value;
 
+
 const text =
 "Join METHRA 🚀 Mine • Earn • Grow\n\n" +
 link;
+
 
 if(navigator.share){
 
@@ -917,75 +1195,42 @@ window.open(
 
 
 /* =========================
-TASK VERIFY
+TELEGRAM VERIFY
 ========================= */
 
-function verifyTask(type){
+async function verifyTelegram(){
 
-if(type !== "telegram"){
-
-alert(
-"X verification is not connected yet."
-);
-
-return;
-
-}
-
-
-/* Already claimed */
-
-if(
-localStorage.getItem(
-"telegram_task_claimed"
-) === "true"
-){
-
-alert(
-"✅ Telegram task already claimed."
-);
-
-return;
-
-}
-
-
-/* Already verified */
-
-if(
-localStorage.getItem(
-"telegram_task_verified"
-) === "true"
-){
-
-document.getElementById(
-"verifyTelegramBtn"
-).style.display = "none";
-
-document.getElementById(
-"claimTelegramBtn"
-).style.display = "block";
-
-alert(
-"✅ Already verified!\n\nYou can claim your +100 MTH."
-);
-
-return;
-
-}
-
-
-/* Telegram WebApp check */
+/*
+Check Telegram Mini App
+*/
 
 if(
 !window.Telegram ||
-!Telegram.WebApp ||
-!Telegram.WebApp.initDataUnsafe ||
-!Telegram.WebApp.initDataUnsafe.user
+!Telegram.WebApp
 ){
 
 alert(
-"Please open METHRA inside Telegram."
+"❌ Please open METHRA inside Telegram."
+);
+
+return;
+
+}
+
+
+Telegram.WebApp.ready();
+
+
+const user =
+Telegram.WebApp
+.initDataUnsafe
+?.user;
+
+
+if(!user){
+
+alert(
+"❌ Telegram user information was not found.\n\nPlease close and reopen METHRA from Telegram."
 );
 
 return;
@@ -994,26 +1239,41 @@ return;
 
 
 const userId =
-Telegram.WebApp
-.initDataUnsafe
-.user
-.id;
+user.id;
 
-
-/* Cloudflare Worker */
 
 const apiUrl =
 "https://methra-api.methmikadul.workers.dev/?user_id=" +
 encodeURIComponent(userId);
 
 
-fetch(apiUrl)
+try{
 
-.then(response =>
-response.json()
-)
+const response =
+await fetch(
+apiUrl,
+{
+method:"GET",
+headers:{
+"Accept":"application/json"
+}
+}
+);
 
-.then(data => {
+
+if(!response.ok){
+
+throw new Error(
+"Server returned HTTP " +
+response.status
+);
+
+}
+
+
+const data =
+await response.json();
+
 
 if(
 !data.ok ||
@@ -1021,7 +1281,7 @@ if(
 ){
 
 alert(
-"Verification failed."
+"❌ Telegram verification failed."
 );
 
 return;
@@ -1044,13 +1304,18 @@ localStorage.setItem(
 "true"
 );
 
+
 document.getElementById(
 "verifyTelegramBtn"
-).style.display = "none";
+).style.display =
+"none";
+
 
 document.getElementById(
 "claimTelegramBtn"
-).style.display = "block";
+).style.display =
+"block";
+
 
 alert(
 "✅ Telegram membership verified!\n\n" +
@@ -1065,15 +1330,48 @@ alert(
 
 }
 
-})
+}catch(error){
 
-.catch(() => {
-
-alert(
-"Connection error. Please try again."
+console.error(
+"Telegram verification error:",
+error
 );
 
-});
+
+alert(
+"❌ Verification connection error.\n\n" +
+"Please make sure you joined METHRA Community and try again."
+);
+
+}
+
+}
+
+
+/* =========================
+TASK VERIFY
+========================= */
+
+function verifyTask(type){
+
+if(type === "telegram"){
+
+verifyTelegram();
+
+return;
+
+}
+
+
+if(type === "x"){
+
+alert(
+"X verification is not connected yet."
+);
+
+return;
+
+}
 
 }
 
@@ -1114,8 +1412,6 @@ return;
 }
 
 
-/* Add reward */
-
 balance += 100;
 
 save();
@@ -1129,7 +1425,8 @@ localStorage.setItem(
 
 document.getElementById(
 "claimTelegramBtn"
-).style.display = "none";
+).style.display =
+"none";
 
 
 updateUI();
@@ -1153,6 +1450,7 @@ document.getElementById(
 ).innerText =
 "TON Connect integration will be added in the production version.";
 
+
 alert(
 "TON Wallet connection is currently a demo."
 );
@@ -1169,7 +1467,9 @@ alert(
 );
 
 return;
+
 }
+
 
 alert(
 "Withdrawal system is not connected yet."
@@ -1199,10 +1499,12 @@ document.getElementById(
 ).innerText =
 balance.toFixed(2);
 
+
 document.getElementById(
 "walletBalance"
 ).innerText =
 balance.toFixed(2);
+
 
 updateMining();
 
@@ -1210,7 +1512,7 @@ updateMining();
 
 
 /* =========================
-TASK UI ON START
+TASK UI
 ========================= */
 
 function updateTaskUI(){
@@ -1219,6 +1521,7 @@ const verified =
 localStorage.getItem(
 "telegram_task_verified"
 ) === "true";
+
 
 const claimed =
 localStorage.getItem(
@@ -1230,11 +1533,15 @@ if(claimed){
 
 document.getElementById(
 "verifyTelegramBtn"
-).style.display = "none";
+).style.display =
+"none";
+
 
 document.getElementById(
 "claimTelegramBtn"
-).style.display = "none";
+).style.display =
+"none";
+
 
 return;
 
@@ -1245,11 +1552,14 @@ if(verified){
 
 document.getElementById(
 "verifyTelegramBtn"
-).style.display = "none";
+).style.display =
+"none";
+
 
 document.getElementById(
 "claimTelegramBtn"
-).style.display = "block";
+).style.display =
+"block";
 
 }
 
@@ -1265,6 +1575,7 @@ generateReferral();
 updateUI();
 
 updateTaskUI();
+
 
 setInterval(
 updateUI,
