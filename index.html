@@ -789,10 +789,6 @@ Wallet
 
 <script>
 
-/* =========================
-METHRA DATA
-========================= */
-
 const SESSION =
 8 * 60 * 60 * 1000;
 
@@ -809,24 +805,42 @@ Number(
 localStorage.getItem("mth_balance") || 0
 );
 
-
 let miningStart =
 Number(
 localStorage.getItem("mining_start") || 0
 );
 
-
 let miningRunning =
 localStorage.getItem("mining_running") === "true";
-
 
 let dailyClaim =
 localStorage.getItem("daily_claim") || "";
 
+let tgUser = null;
 
-/* =========================
-SAVE
-========================= */
+
+/* TELEGRAM USER */
+
+function getTelegramUser(){
+
+if(
+!window.Telegram ||
+!Telegram.WebApp
+){
+
+return null;
+
+}
+
+Telegram.WebApp.ready();
+
+return Telegram.WebApp
+.initDataUnsafe?.user || null;
+
+}
+
+
+/* SAVE */
 
 function save(){
 
@@ -838,9 +852,7 @@ balance
 }
 
 
-/* =========================
-NAVIGATION
-========================= */
+/* NAVIGATION */
 
 function showPage(page,button){
 
@@ -852,7 +864,6 @@ p.classList.remove("active")
 document.getElementById(page)
 .classList.add("active");
 
-
 document.querySelectorAll(".nav button")
 .forEach(b =>
 b.classList.remove("active")
@@ -862,12 +873,14 @@ button.classList.add("active");
 
 updateUI();
 
+if(page === "invite"){
+loadReferralCount();
+}
+
 }
 
 
-/* =========================
-MINING
-========================= */
+/* MINING */
 
 function startMining(){
 
@@ -880,18 +893,15 @@ Date.now();
 miningRunning =
 true;
 
-
 localStorage.setItem(
 "mining_start",
 miningStart
 );
 
-
 localStorage.setItem(
 "mining_running",
 "true"
 );
-
 
 updateUI();
 
@@ -903,10 +913,8 @@ function claimMining(){
 if(!miningRunning)
 return;
 
-
 const elapsed =
 Date.now() - miningStart;
-
 
 if(elapsed < SESSION){
 
@@ -918,29 +926,23 @@ return;
 
 }
 
-
 balance += 8;
 
 save();
 
-
 miningRunning =
 false;
-
 
 localStorage.removeItem(
 "mining_start"
 );
-
 
 localStorage.setItem(
 "mining_running",
 "false"
 );
 
-
 updateUI();
-
 
 alert(
 "🎉 8 MTH claimed!"
@@ -956,36 +958,28 @@ if(!miningRunning){
 document.getElementById("mined")
 .innerText = "0.00";
 
-
 document.getElementById("timer")
 .innerText =
 "Mining not started";
 
-
 document.getElementById("progress")
 .style.width = "0%";
-
 
 document.getElementById("mineBtn")
 .style.display = "block";
 
-
 document.getElementById("claimBtn")
 .style.display = "none";
-
 
 return;
 
 }
 
-
 const elapsed =
 Date.now() - miningStart;
 
-
 const completed =
 elapsed >= SESSION;
-
 
 const secondsLeft =
 Math.max(
@@ -995,22 +989,18 @@ Math.floor(
 )
 );
 
-
 const hours =
 Math.floor(
 secondsLeft / 3600
 );
-
 
 const minutes =
 Math.floor(
 (secondsLeft % 3600) / 60
 );
 
-
 const seconds =
 secondsLeft % 60;
-
 
 const mined =
 Math.min(
@@ -1018,11 +1008,9 @@ Math.min(
 (elapsed / 3600000) * RATE
 );
 
-
 document.getElementById("mined")
 .innerText =
 mined.toFixed(2);
-
 
 document.getElementById("progress")
 .style.width =
@@ -1031,18 +1019,15 @@ Math.min(
 elapsed / SESSION * 100
 ) + "%";
 
-
 if(completed){
 
 document.getElementById("timer")
 .innerText =
 "✅ Mining completed";
 
-
 document.getElementById("mineBtn")
 .style.display =
 "none";
-
 
 document.getElementById("claimBtn")
 .style.display =
@@ -1054,11 +1039,9 @@ document.getElementById("timer")
 .innerText =
 `${hours}h ${minutes}m ${seconds}s remaining`;
 
-
 document.getElementById("mineBtn")
 .style.display =
 "none";
-
 
 document.getElementById("claimBtn")
 .style.display =
@@ -1069,9 +1052,7 @@ document.getElementById("claimBtn")
 }
 
 
-/* =========================
-DAILY BONUS
-========================= */
+/* DAILY BONUS */
 
 function dailyBonus(){
 
@@ -1079,7 +1060,6 @@ const today =
 new Date()
 .toISOString()
 .slice(0,10);
-
 
 if(dailyClaim === today){
 
@@ -1091,23 +1071,19 @@ return;
 
 }
 
-
 balance += 50;
 
 dailyClaim =
 today;
-
 
 localStorage.setItem(
 "daily_claim",
 today
 );
 
-
 save();
 
 updateUI();
-
 
 alert(
 "🎁 +50 MTH added!"
@@ -1117,24 +1093,21 @@ alert(
 
 
 /* =========================
-REFERRAL
+REFERRAL SYSTEM
 ========================= */
 
 function generateReferral(){
 
+tgUser = getTelegramUser();
+
+if(!tgUser){
+
+return;
+
+}
+
 const id =
-localStorage.getItem("methra_id")
-||
-Math.random()
-.toString(36)
-.substring(2,10);
-
-
-localStorage.setItem(
-"methra_id",
-id
-);
-
+String(tgUser.id);
 
 document.getElementById("refLink")
 .value =
@@ -1144,11 +1117,111 @@ id;
 }
 
 
+/* REGISTER USER + REFERRAL */
+
+async function registerUser(){
+
+tgUser = getTelegramUser();
+
+if(!tgUser){
+
+return;
+
+}
+
+try{
+
+const startParam =
+Telegram.WebApp
+.initDataUnsafe
+?.start_param || "";
+
+await fetch(
+API_BASE + "/user",
+{
+method:"POST",
+
+headers:{
+"Content-Type":
+"application/json"
+},
+
+body:JSON.stringify({
+
+user_id:tgUser.id,
+
+username:
+tgUser.username || "",
+
+referral:
+startParam
+
+})
+
+}
+);
+
+}catch(error){
+
+console.error(
+"User registration error:",
+error
+);
+
+}
+
+}
+
+
+/* LOAD REFERRAL COUNT */
+
+async function loadReferralCount(){
+
+tgUser = getTelegramUser();
+
+if(!tgUser){
+
+return;
+
+}
+
+try{
+
+const response =
+await fetch(
+API_BASE +
+"/referrals?user_id=" +
+encodeURIComponent(tgUser.id)
+);
+
+const data =
+await response.json();
+
+if(data.ok){
+
+document.getElementById(
+"refCount"
+).innerText =
+data.count;
+
+}
+
+}catch(error){
+
+console.error(
+"Referral count error:",
+error
+);
+
+}
+
+}
+
+
 function copyReferral(){
 
 const input =
 document.getElementById("refLink");
-
 
 if(
 navigator.clipboard &&
@@ -1197,13 +1270,25 @@ const link =
 document.getElementById("refLink")
 .value;
 
-
 const text =
 "Join METHRA 🚀 Mine • Earn • Grow\n\n" +
 link;
 
+if(
+window.Telegram &&
+Telegram.WebApp
+){
 
-if(navigator.share){
+Telegram.WebApp.openTelegramLink(
+"https://t.me/share/url?url=" +
+encodeURIComponent(link) +
+"&text=" +
+encodeURIComponent(
+"Join METHRA 🚀 Mine • Earn • Grow"
+)
+);
+
+}else if(navigator.share){
 
 navigator.share({
 title:"METHRA",
@@ -1219,9 +1304,7 @@ copyReferral();
 }
 
 
-/* =========================
-TASK LINKS
-========================= */
+/* TASK LINKS */
 
 function openTelegram(){
 
@@ -1243,9 +1326,7 @@ window.open(
 }
 
 
-/* =========================
-TELEGRAM VERIFY
-========================= */
+/* TELEGRAM VERIFY */
 
 async function verifyTelegram(){
 
@@ -1262,36 +1343,30 @@ return;
 
 }
 
-
 Telegram.WebApp.ready();
-
 
 const user =
 Telegram.WebApp
 .initDataUnsafe
 ?.user;
 
-
 if(!user){
 
 alert(
-"❌ Telegram user information was not found.\n\nPlease close and reopen METHRA from Telegram."
+"❌ Telegram user information was not found."
 );
 
 return;
 
 }
 
-
 const userId =
 user.id;
-
 
 const apiUrl =
 API_BASE +
 "/?user_id=" +
 encodeURIComponent(userId);
-
 
 try{
 
@@ -1301,11 +1376,11 @@ apiUrl,
 {
 method:"GET",
 headers:{
-"Accept":"application/json"
+"Accept":
+"application/json"
 }
 }
 );
-
 
 if(!response.ok){
 
@@ -1316,10 +1391,8 @@ response.status
 
 }
 
-
 const data =
 await response.json();
-
 
 if(
 !data.ok ||
@@ -1334,10 +1407,8 @@ return;
 
 }
 
-
 const status =
 data.result.status;
-
 
 if(
 status === "member" ||
@@ -1350,18 +1421,15 @@ localStorage.setItem(
 "true"
 );
 
-
 document.getElementById(
 "verifyTelegramBtn"
 ).style.display =
 "none";
 
-
 document.getElementById(
 "claimTelegramBtn"
 ).style.display =
 "block";
-
 
 alert(
 "✅ Telegram membership verified!\n\n" +
@@ -1383,7 +1451,6 @@ console.error(
 error
 );
 
-
 alert(
 "❌ Verification connection error.\n\n" +
 "Please try again later."
@@ -1394,9 +1461,7 @@ alert(
 }
 
 
-/* =========================
-TASK VERIFY
-========================= */
+/* TASK VERIFY */
 
 function verifyTask(type){
 
@@ -1407,7 +1472,6 @@ verifyTelegram();
 return;
 
 }
-
 
 if(type === "x"){
 
@@ -1422,9 +1486,7 @@ return;
 }
 
 
-/* =========================
-CLAIM TELEGRAM REWARD
-========================= */
+/* CLAIM TELEGRAM */
 
 function claimTelegramReward(){
 
@@ -1442,7 +1504,6 @@ return;
 
 }
 
-
 if(
 localStorage.getItem(
 "telegram_task_claimed"
@@ -1457,26 +1518,21 @@ return;
 
 }
 
-
 balance += 100;
 
 save();
-
 
 localStorage.setItem(
 "telegram_task_claimed",
 "true"
 );
 
-
 document.getElementById(
 "claimTelegramBtn"
 ).style.display =
 "none";
 
-
 updateUI();
-
 
 alert(
 "🎉 +100 MTH added to your balance!"
@@ -1485,9 +1541,7 @@ alert(
 }
 
 
-/* =========================
-WALLET
-========================= */
+/* WALLET */
 
 function connectWallet(){
 
@@ -1513,12 +1567,10 @@ return;
 
 }
 
-
 const wallet =
 document.getElementById(
 "withdrawWallet"
 ).value.trim();
-
 
 const amount =
 Number(
@@ -1526,7 +1578,6 @@ document.getElementById(
 "withdrawAmount"
 ).value
 );
-
 
 if(!wallet){
 
@@ -1538,8 +1589,10 @@ return;
 
 }
 
-
-if(!amount || amount < MIN_WITHDRAWAL){
+if(
+!amount ||
+amount < MIN_WITHDRAWAL
+){
 
 alert(
 "⚠️ Minimum withdrawal is 2000 MTH."
@@ -1548,7 +1601,6 @@ alert(
 return;
 
 }
-
 
 if(amount > balance){
 
@@ -1560,13 +1612,8 @@ return;
 
 }
 
-
 const tgUser =
-window.Telegram &&
-Telegram.WebApp &&
-Telegram.WebApp.initDataUnsafe &&
-Telegram.WebApp.initDataUnsafe.user;
-
+getTelegramUser();
 
 if(!tgUser){
 
@@ -1578,32 +1625,27 @@ return;
 
 }
 
-
 const username =
-tgUser.username || "No username";
-
+tgUser.username ||
+"No username";
 
 const userId =
 tgUser.id;
-
 
 const button =
 document.getElementById(
 "withdrawBtn"
 );
 
-
 button.disabled = true;
 
 button.innerText =
 "⏳ Sending...";
 
-
 document.getElementById(
 "withdrawStatus"
 ).innerText =
 "⏳ Withdrawal request is being submitted...";
-
 
 try{
 
@@ -1614,7 +1656,8 @@ API_BASE + "/withdraw",
 method:"POST",
 
 headers:{
-"Content-Type":"application/json"
+"Content-Type":
+"application/json"
 },
 
 body:JSON.stringify({
@@ -1632,10 +1675,8 @@ wallet:wallet
 }
 );
 
-
 const data =
 await response.json();
-
 
 if(!data.ok){
 
@@ -1646,35 +1687,29 @@ data.error ||
 
 }
 
-
 document.getElementById(
 "withdrawStatus"
 ).innerText =
 "⏳ Withdrawal request: Pending Review";
-
 
 alert(
 "✅ Withdrawal request submitted!\n\n" +
 "Your request is now pending review."
 );
 
-
 }catch(error){
 
 console.error(error);
-
 
 document.getElementById(
 "withdrawStatus"
 ).innerText =
 "❌ Request failed";
 
-
 alert(
 "❌ Could not submit the request.\n\n" +
 "Please try again later."
 );
-
 
 }finally{
 
@@ -1688,9 +1723,7 @@ button.innerText =
 }
 
 
-/* =========================
-DEPOSIT
-========================= */
+/* DEPOSIT */
 
 function depositSoon(){
 
@@ -1702,9 +1735,7 @@ alert(
 }
 
 
-/* =========================
-UI
-========================= */
+/* UI */
 
 function updateUI(){
 
@@ -1713,21 +1744,17 @@ document.getElementById(
 ).innerText =
 balance.toFixed(2);
 
-
 document.getElementById(
 "walletBalance"
 ).innerText =
 balance.toFixed(2);
-
 
 updateMining();
 
 }
 
 
-/* =========================
-TASK UI
-========================= */
+/* TASK UI */
 
 function updateTaskUI(){
 
@@ -1736,12 +1763,10 @@ localStorage.getItem(
 "telegram_task_verified"
 ) === "true";
 
-
 const claimed =
 localStorage.getItem(
 "telegram_task_claimed"
 ) === "true";
-
 
 if(claimed){
 
@@ -1750,17 +1775,14 @@ document.getElementById(
 ).style.display =
 "none";
 
-
 document.getElementById(
 "claimTelegramBtn"
 ).style.display =
 "none";
 
-
 return;
 
 }
-
 
 if(verified){
 
@@ -1768,7 +1790,6 @@ document.getElementById(
 "verifyTelegramBtn"
 ).style.display =
 "none";
-
 
 document.getElementById(
 "claimTelegramBtn"
@@ -1780,20 +1801,39 @@ document.getElementById(
 }
 
 
-/* =========================
-START
-========================= */
+/* START */
+
+async function initMETHRA(){
+
+tgUser =
+getTelegramUser();
+
+if(tgUser){
 
 generateReferral();
+
+await registerUser();
+
+await loadReferralCount();
+
+}
 
 updateUI();
 
 updateTaskUI();
 
+}
+
+initMETHRA();
 
 setInterval(
 updateUI,
 1000
+);
+
+setInterval(
+loadReferralCount,
+10000
 );
 
 </script>
